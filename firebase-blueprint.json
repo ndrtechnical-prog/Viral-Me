@@ -1,0 +1,179 @@
+{
+  "entities": {
+    "Order": {
+      "title": "Order",
+      "description": "A social media promotion order placed by a customer",
+      "type": "object",
+      "properties": {
+        "orderId": {
+          "type": "string",
+          "description": "Unique identifier for the order"
+        },
+        "platform": {
+          "type": "string",
+          "enum": ["tiktok", "instagram", "youtube", "facebook"],
+          "description": "Target social media platform"
+        },
+        "serviceType": {
+          "type": "string",
+          "enum": ["views", "likes", "comments", "followers", "shares", "saves"],
+          "description": "Type of promotion service"
+        },
+        "startingVolume": {
+          "type": "number",
+          "description": "Starting volume metric"
+        },
+        "dailyVolume": {
+          "type": "number",
+          "description": "Daily volume delivery"
+        },
+        "totalVolume": {
+          "type": "number",
+          "description": "Total volume across all campaign days"
+        },
+        "days": {
+          "type": "number",
+          "description": "Duration in days (1 to 30)"
+        },
+        "engagement": {
+          "type": "number",
+          "description": "Engagement rate / metric"
+        },
+        "reach": {
+          "type": "number",
+          "description": "Daily reach estimation"
+        },
+        "estimatedReach": {
+          "type": "number",
+          "description": "Total estimated reach across the campaign"
+        },
+        "amount": {
+          "type": "number",
+          "description": "Total campaign amount in PKR"
+        },
+        "videoUrl": {
+          "type": "string",
+          "description": "Submitted social media video/post URL"
+        },
+        "thumbnail": {
+          "type": "string",
+          "description": "Public video thumbnail URL"
+        },
+        "currentReach": {
+          "type": "string",
+          "description": "Publicly fetched current metrics"
+        },
+        "transactionId": {
+          "type": "string",
+          "description": "Easypaisa / JazzCash Transaction ID"
+        },
+        "paymentStatus": {
+          "type": "string",
+          "enum": ["pending", "verified", "rejected"],
+          "description": "Payment verification status"
+        },
+        "orderStatus": {
+          "type": "string",
+          "enum": ["pending", "payment_verified", "processing", "completed", "cancelled"],
+          "description": "Fulfillment status of the order"
+        },
+        "userId": {
+          "type": "string",
+          "description": "User ID or anonymous session ID"
+        },
+        "createdAt": {
+          "type": "string",
+          "format": "date-time",
+          "description": "Order creation timestamp"
+        },
+        "updatedAt": {
+          "type": "string",
+          "format": "date-time",
+          "description": "Order last update timestamp"
+        }
+      },
+      "required": ["orderId", "platform", "serviceType", "dailyVolume", "totalVolume", "days", "amount"]
+    },
+    "AdminSettings": {
+      "title": "AdminSettings",
+      "description": "Dynamic platform pricing and volume calculation configuration",
+      "type": "object",
+      "properties": {
+        "defaultDailyVolume": {
+          "type": "number",
+          "description": "Default daily volume for promotions"
+        },
+        "defaultReach": {
+          "type": "number",
+          "description": "Default reach metric"
+        },
+        "defaultAmount": {
+          "type": "number",
+          "description": "Default base amount in currency"
+        },
+        "volumeGrowthRate": {
+          "type": "number",
+          "description": "Growth multiplier for volume calculations"
+        },
+        "reachGrowthRate": {
+          "type": "number",
+          "description": "Growth multiplier for reach calculations"
+        },
+        "amountGrowthRate": {
+          "type": "number",
+          "description": "Growth multiplier for price calculations"
+        },
+        "maximumDays": {
+          "type": "number",
+          "description": "Maximum days allowed for campaign"
+        },
+        "updatedAt": {
+          "type": "string",
+          "format": "date-time",
+          "description": "Last updated timestamp"
+        }
+      },
+      "required": ["defaultDailyVolume", "defaultReach", "defaultAmount", "maximumDays"]
+    },
+    "User": {
+      "title": "User",
+      "description": "User profile with role definition",
+      "type": "object",
+      "properties": {
+        "uid": {
+          "type": "string",
+          "description": "Firebase Auth UID"
+        },
+        "email": {
+          "type": "string",
+          "description": "User email address"
+        },
+        "role": {
+          "type": "string",
+          "enum": ["user", "admin"],
+          "description": "User role authorization"
+        },
+        "createdAt": {
+          "type": "string",
+          "format": "date-time",
+          "description": "Account creation timestamp"
+        }
+      },
+      "required": ["uid", "role"]
+    }
+  },
+  "firestore": {
+    "/orders/{orderId}": {
+      "schema": "Order",
+      "description": "Collection of customer promotion orders"
+    },
+    "/adminSettings/{settingsId}": {
+      "schema": "AdminSettings",
+      "description": "Dynamic calculation rules and platform settings"
+    },
+    "/users/{userId}": {
+      "schema": "User",
+      "description": "Registered user accounts and admin roles"
+    }
+  }
+}

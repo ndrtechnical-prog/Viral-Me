@@ -1,0 +1,6 @@
+{
+  "name": "Viral Me",
+  "description": "Viral Me - Social Media Growth & Promotion platform powered by Viral Wave",
+  "requestFramePermissions": [],
+  "majorCapabilities": ["MAJOR_CAPABILITY_SERVER_SIDE_GEMINI_API"]
+}

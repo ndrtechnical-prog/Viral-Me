@@ -1,0 +1,7 @@
+# Robots.txt for https://viralme.site
+User-agent: *
+Allow: /
+Disallow: /api/admin/
+
+# Sitemap Location
+Sitemap: https://viralme.site/sitemap.xml

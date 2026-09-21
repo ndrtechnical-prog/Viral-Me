@@ -1,0 +1,73 @@
+rules_version = '2';
+service cloud.firestore {
+  match /databases/{database}/documents {
+
+    function isAuthenticated() {
+      return request.auth != null;
+    }
+
+    function isAdmin() {
+      return isAuthenticated() && (
+        request.auth.token.admin == true ||
+        request.auth.token.email == 'ndrtechnical@gmail.com' ||
+        (exists(/databases/$(database)/documents/users/$(request.auth.uid)) &&
+         get(/databases/$(database)/documents/users/$(request.auth.uid)).data.role == 'admin') ||
+        exists(/databases/$(database)/documents/admins/$(request.auth.uid))
+      );
+    }
+
+    function isValidId(id) {
+      return id is string && id.size() > 0 && id.size() <= 128 && id.matches('^[a-zA-Z0-9_\\-]+$');
+    }
+
+    // Admin Settings: readable by all so frontend can calculate based on live rates; writable only by admins
+    match /adminSettings/{settingsId} {
+      allow read: if true;
+      allow write: if isAdmin();
+    }
+
+    // User accounts
+    match /users/{userId} {
+      allow read: if isAuthenticated() && (request.auth.uid == userId || isAdmin());
+      allow create: if isAuthenticated() && request.auth.uid == userId;
+      allow update: if isAuthenticated() && (request.auth.uid == userId && !('role' in request.resource.data) || isAdmin());
+      allow delete: if isAdmin();
+    }
+
+    // Orders
+    match /orders/{orderId} {
+      // Allow customers to lookup their own order by ID, or owner, or admin
+      allow get: if isValidId(orderId) || isAdmin() || (isAuthenticated() && resource.data.userId == request.auth.uid);
+
+      // Listing all orders is strictly restricted to admin or owner's query
+      allow list: if isAdmin() || (isAuthenticated() && resource.data.userId == request.auth.uid);
+
+      allow create: if isValidId(orderId) &&
+        request.resource.data.orderId is string &&
+        request.resource.data.platform in ['tiktok', 'instagram', 'youtube', 'facebook'] &&
+        request.resource.data.serviceType in ['views', 'likes', 'comments', 'followers', 'shares', 'saves'] &&
+        request.resource.data.days >= 1 && request.resource.data.days <= 30 &&
+        request.resource.data.amount > 0;
+
+      allow update: if isAdmin() || (
+        // Allow customer to update their draft before final verification
+        isValidId(orderId) &&
+        resource.data.orderStatus == 'pending' &&
+        request.resource.data.days >= 1 && request.resource.data.days <= 30
+      );
+
+      allow delete: if isAdmin();
+    }
+
+    // Admins role collection
+    match /admins/{adminId} {
+      allow read: if isAuthenticated();
+      allow write: if isAdmin();
+    }
+
+    // Connection test document
+    match /test/{docId} {
+      allow read, write: if true;
+    }
+  }
+}
