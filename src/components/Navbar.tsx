@@ -1,5 +1,5 @@
 import React from 'react';
-import { BadgeCheck, Package } from 'lucide-react';
+import { BadgeCheck, Package, Sparkles } from 'lucide-react';
 import { ThemeToggle } from './ThemeToggle.tsx';
 
 interface NavbarProps {
@@ -7,10 +7,12 @@ interface NavbarProps {
   onOpenAdminLogin?: () => void;
   isAdminLoggedIn?: boolean;
   onOpenAdminDashboard?: () => void;
+  onOpenFreeTools?: () => void;
 }
 
 export const Navbar: React.FC<NavbarProps> = ({
   onOpenLookup,
+  onOpenFreeTools,
 }) => {
   return (
     <header className="w-full border-b border-gray-200/80 dark:border-neutral-800/80 bg-white/95 dark:bg-neutral-900/95 backdrop-blur-md sticky top-0 z-40 transition-colors duration-200">
@@ -25,6 +27,20 @@ export const Navbar: React.FC<NavbarProps> = ({
 
         {/* Action Controls */}
         <div className="flex items-center gap-2 sm:gap-3">
+          {/* Free Tools Button */}
+          {onOpenFreeTools && (
+            <button
+              type="button"
+              onClick={onOpenFreeTools}
+              className="inline-flex items-center gap-1.5 px-3 py-1.5 rounded-full bg-pink-50 dark:bg-pink-950/50 hover:bg-pink-100 dark:hover:bg-pink-900/50 border border-pink-200 dark:border-pink-850 text-xs font-bold text-pink-700 dark:text-pink-300 transition-colors cursor-pointer shadow-2xs"
+              title="Explore Free Viral Creator Tools"
+            >
+              <Sparkles className="w-3.5 h-3.5 text-pink-500 animate-pulse" />
+              <span className="hidden xs:inline">Free</span>
+              <span>Tools</span>
+            </button>
+          )}
+
           {/* Global Theme Toggle */}
           <ThemeToggle />
 

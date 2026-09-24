@@ -31,6 +31,7 @@ interface VolumeCalculatorProps {
   onBack: () => void;
   onNext: () => void;
   isCalculating?: boolean;
+  onOpenFreeTools?: () => void;
 }
 
 export const VolumeCalculator: React.FC<VolumeCalculatorProps> = ({
@@ -40,6 +41,7 @@ export const VolumeCalculator: React.FC<VolumeCalculatorProps> = ({
   onBack,
   onNext,
   isCalculating,
+  onOpenFreeTools,
 }) => {
   const serviceType: ServiceType = orderDraft.serviceType || 'views';
   const effectiveMin = getEffectiveMinimumOrder(serviceType, settings);
@@ -289,7 +291,7 @@ export const VolumeCalculator: React.FC<VolumeCalculatorProps> = ({
   return (
     <div className="w-full max-w-lg mx-auto space-y-4 animate-fadeIn">
       {/* Brand Header */}
-      <BrandHeader />
+      <BrandHeader onOpenFreeTools={onOpenFreeTools} />
 
       {/* Selected Service Badge */}
       <div className="flex items-center justify-between px-1">

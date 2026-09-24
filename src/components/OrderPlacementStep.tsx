@@ -23,6 +23,7 @@ import { BrandHeader } from './BrandHeader.tsx';
 import { saveMyOrderId } from '../services/orderService.ts';
 import { compressImage } from '../utils/imageCompressor.ts';
 import { useToast } from '../context/ToastContext.tsx';
+import { HeartLoader } from './HeartLoader.tsx';
 
 interface OrderPlacementStepProps {
   orderDraft: OrderDraft;
@@ -169,6 +170,18 @@ export const OrderPlacementStep: React.FC<OrderPlacementStepProps> = ({
   if (isSuccess) {
     return (
       <div className="w-full max-w-lg mx-auto bg-white dark:bg-neutral-800/90 border border-gray-200 dark:border-neutral-700/80 rounded-3xl p-6 sm:p-8 shadow-sm space-y-6 text-center animate-fadeIn">
+        {/* Holographic Viral Celebration Sticker */}
+        <div className="relative inline-block mx-auto">
+          <div className="px-4 py-2 rounded-2xl bg-gradient-to-r from-red-600 via-pink-600 to-amber-500 text-white font-black text-xs shadow-lg shadow-pink-500/25 border-2 border-white dark:border-neutral-800 rotate-[-2deg] flex items-center gap-2 animate-bounce">
+            <span className="text-base">🔥</span>
+            <div className="text-left leading-tight">
+              <div className="text-[10px] uppercase tracking-wider text-pink-100 font-extrabold">Viral Wave Verified</div>
+              <div className="text-xs font-black">CAMPAIGN QUEUED FOR FYP</div>
+            </div>
+            <span className="text-base">🚀</span>
+          </div>
+        </div>
+
         <div className="w-16 h-16 bg-emerald-50 dark:bg-emerald-950/40 text-emerald-600 dark:text-emerald-400 rounded-full flex items-center justify-center mx-auto ring-8 ring-emerald-50/50 dark:ring-emerald-950/20">
           <CheckCircle2 className="w-9 h-9" />
         </div>
@@ -295,20 +308,11 @@ export const OrderPlacementStep: React.FC<OrderPlacementStepProps> = ({
                 <span className="animate-ping absolute inline-flex h-full w-full rounded-full bg-emerald-400 opacity-75"></span>
                 <span className="relative inline-flex rounded-full h-2.5 w-2.5 bg-emerald-500"></span>
               </span>
-              <span>Live Alerts Active</span>
-            </div>
-            <div className="flex items-center gap-2">
-              <button
-                type="button"
-                onClick={() => notifyPaymentApproved(orderDraft.orderId, () => onTrackOrder(orderDraft.orderId))}
-                className="text-[11px] font-bold text-emerald-700 dark:text-emerald-300 hover:text-emerald-900 dark:hover:text-emerald-200 hover:underline cursor-pointer"
-              >
-                Test Alert
-              </button>
+              <span>Live Firestore Alerts Active</span>
             </div>
           </div>
           <p className="text-emerald-800 dark:text-emerald-300 text-[11px] leading-relaxed">
-            Aapki payment approve hote hi ya order status <strong>'Processing'</strong> hone par screen par fori toast notification aayega.
+            Aapki payment approve hote hi ya order status <strong>'Processing'</strong> hone par screen par fori status notification update hojayega.
           </p>
         </div>
 
@@ -352,6 +356,19 @@ export const OrderPlacementStep: React.FC<OrderPlacementStepProps> = ({
     <div className="w-full max-w-lg mx-auto space-y-4 animate-fadeIn">
       {/* Brand Header */}
       <BrandHeader />
+
+      {/* Viral FYP Launch Sticker Badge */}
+      <div className="flex items-center justify-between gap-2 px-1">
+        <div className="inline-flex items-center gap-1.5 px-3 py-1 rounded-full bg-gradient-to-r from-red-600 via-pink-600 to-amber-500 text-white font-black text-xs shadow-md shadow-pink-500/20 transform -rotate-1 hover:rotate-0 transition-transform">
+          <span className="text-sm">🔥</span>
+          <span className="tracking-tight uppercase text-[11px]">100% Viral FYP Guarantee</span>
+          <span className="text-xs">✨</span>
+        </div>
+        <span className="inline-flex items-center gap-1 text-[11px] font-bold text-gray-500 dark:text-neutral-400 font-mono">
+          <BadgeCheck className="w-3.5 h-3.5 text-blue-500" />
+          <span>Step 3 of 3</span>
+        </span>
+      </div>
 
       {/* Mini Campaign Summary */}
       <div className="bg-white dark:bg-neutral-800/90 border border-gray-200 dark:border-neutral-700/80 rounded-3xl p-4 sm:p-5 shadow-xs flex items-center justify-between gap-3">
@@ -559,10 +576,11 @@ export const OrderPlacementStep: React.FC<OrderPlacementStepProps> = ({
 
           {/* Upload Button / Dropzone */}
           {isCompressing ? (
-            <div className="border-2 border-dashed border-blue-300 dark:border-neutral-600 bg-blue-50/40 dark:bg-neutral-900 rounded-2xl p-8 text-center space-y-2">
-              <Loader2 className="w-8 h-8 text-blue-600 dark:text-blue-400 animate-spin mx-auto" />
-              <p className="text-xs font-bold text-gray-800 dark:text-neutral-200">Tasveer check aur optimize ho rahi hai...</p>
-              <p className="text-[11px] text-gray-500 dark:text-neutral-400">Payment receipt verify ki ja rahi hai</p>
+            <div className="border-2 border-dashed border-rose-300 dark:border-rose-900/60 bg-rose-50/40 dark:bg-neutral-900 rounded-2xl p-6 text-center space-y-2">
+              <HeartLoader
+                message="Receipt verify aur optimize ho rahi hai..."
+                subMessage="Payment screenshot process ki ja rahi hai"
+              />
             </div>
           ) : screenshotData ? (
             <div className="relative border-2 border-emerald-300 dark:border-emerald-700/80 bg-emerald-50/40 dark:bg-emerald-950/20 rounded-2xl p-4 text-center space-y-3">
@@ -714,16 +732,22 @@ export const OrderPlacementStep: React.FC<OrderPlacementStepProps> = ({
             className="w-2/3 py-3.5 px-6 rounded-2xl bg-emerald-600 hover:bg-emerald-700 active:bg-emerald-800 text-white font-black text-sm shadow-md shadow-emerald-600/25 flex items-center justify-center gap-2 transition-all cursor-pointer disabled:opacity-50"
           >
             {isSubmitting ? (
-              <>
-                <Loader2 className="w-4 h-4 animate-spin" />
-                <span>Submitting Order...</span>
-              </>
+              <span>Submitting Order...</span>
             ) : (
               <span>Submit Order & Continue Ad</span>
             )}
           </button>
         </div>
       </form>
+
+      {/* Red Heart Loading Bar Overlay */}
+      {isSubmitting && (
+        <HeartLoader
+          fullScreen
+          message="Aapka order mehfooz submit ho raha hai..."
+          subMessage="Queue me priority review ke liye register kiya ja raha hai"
+        />
+      )}
     </div>
   );
 };

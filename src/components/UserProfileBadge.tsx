@@ -1,14 +1,18 @@
 import React, { useState, useEffect } from 'react';
-import { Pencil, X, Check, Loader2, RefreshCw } from 'lucide-react';
+import { Pencil, X, Check, Loader2, RefreshCw, Sparkles, ArrowRight, Zap } from 'lucide-react';
 
 export interface ProfileData {
   username: string;
   avatarUrl: string;
 }
 
+interface UserProfileBadgeProps {
+  onOpenFreeTools?: () => void;
+}
+
 const STORAGE_KEY = 'viralme_tiktok_profile';
 
-export const UserProfileBadge: React.FC = () => {
+export const UserProfileBadge: React.FC<UserProfileBadgeProps> = ({ onOpenFreeTools }) => {
   const [profile, setProfile] = useState<ProfileData>(() => {
     try {
       const saved = localStorage.getItem(STORAGE_KEY);
@@ -36,6 +40,16 @@ export const UserProfileBadge: React.FC = () => {
   const [isLoadingAvatar, setIsLoadingAvatar] = useState(false);
   const [imgError, setImgError] = useState(false);
   const [error, setError] = useState<string | null>(null);
+
+  // 5-Second Recurring Popout for Free Tools
+  const [showToolsPopout, setShowToolsPopout] = useState(true);
+
+  useEffect(() => {
+    const timer = setInterval(() => {
+      setShowToolsPopout((prev) => !prev);
+    }, 5000);
+    return () => clearInterval(timer);
+  }, []);
 
   const cleanCurrent = profile.username.replace(/^@+/, '');
   const avatarSrc = `/api/tiktok-avatar?username=${encodeURIComponent(cleanCurrent)}`;
@@ -76,41 +90,53 @@ export const UserProfileBadge: React.FC = () => {
   };
 
   return (
-    <div className="flex flex-col items-center justify-center mb-1 animate-fadeIn">
-      {/* Real TikTok Profile Circular Avatar Fetched From TikTok */}
+    <div className="flex flex-col items-center justify-center mb-1 animate-fadeIn relative">
+      {/* Real TikTok Profile Circular Avatar with Color Circle Gradient Ring */}
       <div className="relative group">
-        <button
-          type="button"
-          onClick={handleOpenEdit}
-          className="relative w-14 h-14 sm:w-16 sm:h-16 rounded-full overflow-hidden border-2 border-white dark:border-neutral-800 ring-2 ring-pink-500/60 shadow-md select-none cursor-pointer hover:scale-105 active:scale-95 transition-transform duration-200 bg-neutral-900 flex items-center justify-center"
-          title="TikTok Profile Picture"
-        >
-          {imgError ? (
-            <div className="w-full h-full bg-gradient-to-br from-black via-neutral-900 to-pink-600 flex items-center justify-center text-white font-black text-xl">
-              {cleanCurrent.charAt(0).toUpperCase() || 'T'}
-            </div>
-          ) : (
-            <img
-              src={avatarSrc}
-              alt={`${profile.username} TikTok Profile`}
-              referrerPolicy="no-referrer"
-              onError={() => setImgError(true)}
-              className="w-full h-full object-cover"
-            />
-          )}
+        {/* Animated Multi-Color Gradient Ring Circle */}
+        <div className="p-[3.5px] rounded-full bg-gradient-to-tr from-[#25F4EE] via-[#FE2C55] to-[#FFA800] shadow-md hover:shadow-lg transition-shadow duration-300">
+          <button
+            type="button"
+            onClick={handleOpenEdit}
+            className="relative w-14 h-14 sm:w-16 sm:h-16 rounded-full overflow-hidden border-2 border-white dark:border-neutral-900 select-none cursor-pointer hover:scale-105 active:scale-95 transition-transform duration-200 bg-neutral-900 flex items-center justify-center"
+            title="Click to edit TikTok Profile Picture"
+          >
+            {imgError ? (
+              <div className="w-full h-full bg-gradient-to-br from-black via-neutral-900 to-pink-600 flex items-center justify-center text-white font-black text-xl">
+                {cleanCurrent.charAt(0).toUpperCase() || 'T'}
+              </div>
+            ) : (
+              <img
+                src={avatarSrc}
+                alt={`${profile.username} TikTok Profile`}
+                referrerPolicy="no-referrer"
+                onError={() => setImgError(true)}
+                className="w-full h-full object-cover"
+              />
+            )}
 
-          {/* TikTok Mini Overlay Tag */}
-          <div className="absolute bottom-0 inset-x-0 bg-black/60 backdrop-blur-2xs py-0.5 text-[8px] font-black text-white text-center tracking-wider uppercase">
-            TikTok
-          </div>
-        </button>
+            {/* TikTok Mini Overlay Tag */}
+            <div className="absolute bottom-0 inset-x-0 bg-black/60 backdrop-blur-2xs py-0.5 text-[8px] font-black text-white text-center tracking-wider uppercase">
+              TikTok
+            </div>
+          </button>
+        </div>
+
+        {/* Live Color Status Circle Badge on Avatar Corner */}
+        <span className="absolute bottom-0 right-0 w-4 h-4 rounded-full bg-emerald-500 border-2 border-white dark:border-neutral-900 flex items-center justify-center shadow-xs">
+          <span className="w-1.5 h-1.5 rounded-full bg-white animate-ping" />
+        </span>
       </div>
 
-      {/* Username and Pencil Icon */}
+      {/* Username, Color Circle Dot, and Pencil Icon */}
       <div className="flex items-center gap-1.5 mt-1.5">
+        {/* Dynamic Color Circle Indicator */}
+        <div className="w-2.5 h-2.5 rounded-full bg-gradient-to-r from-pink-500 via-rose-500 to-amber-400 animate-pulse shadow-xs" title="Verified Creator Account" />
+
         <span className="text-xs font-black text-gray-700 dark:text-neutral-200 font-mono tracking-tight">
           {profile.username}
         </span>
+
         <button
           type="button"
           onClick={handleOpenEdit}
@@ -121,6 +147,29 @@ export const UserProfileBadge: React.FC = () => {
           <Pencil className="w-3.5 h-3.5" />
         </button>
       </div>
+
+      {/* 5-Second Recurring Animated Popout under Profile for Free Tools */}
+      {onOpenFreeTools && (
+        <div className="mt-2 transition-all duration-300 transform">
+          <button
+            type="button"
+            onClick={onOpenFreeTools}
+            className={`group inline-flex items-center gap-1.5 px-3 py-1 rounded-full text-[11px] font-black tracking-tight cursor-pointer shadow-xs border transition-all duration-500 ${
+              showToolsPopout
+                ? 'bg-gradient-to-r from-pink-500/15 via-purple-500/15 to-cyan-500/15 border-pink-300 dark:border-pink-800 text-pink-700 dark:text-pink-300 scale-100 opacity-100 hover:scale-105 shadow-pink-500/10'
+                : 'bg-gray-100 dark:bg-neutral-800/80 border-gray-200 dark:border-neutral-700 text-gray-600 dark:text-neutral-400 scale-95 opacity-85 hover:opacity-100'
+            }`}
+            title="Explore Free Viral Tools"
+          >
+            <Sparkles className="w-3 h-3 text-pink-500 animate-spin" style={{ animationDuration: '4s' }} />
+            <span>Free Tools</span>
+            <span className="text-[9px] px-1.5 py-0.2 rounded-full bg-pink-500 text-white font-bold uppercase animate-pulse">
+              Free
+            </span>
+            <ArrowRight className="w-3 h-3 group-hover:translate-x-0.5 transition-transform" />
+          </button>
+        </div>
+      )}
 
       {/* Edit TikTok Profile Modal */}
       {isEditing && (

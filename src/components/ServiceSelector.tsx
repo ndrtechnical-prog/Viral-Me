@@ -14,6 +14,7 @@ import {
 import type { PlatformType, ServiceType, OrderDraft, AdminSettings } from '../types/index.ts';
 import { BrandHeader } from './BrandHeader.tsx';
 import { getEffectiveMinimumOrder, recalculateFromAmount } from '../utils/pricingCalculator.ts';
+import { HeartLoader } from './HeartLoader.tsx';
 
 interface ServiceSelectorProps {
   orderDraft: OrderDraft;
@@ -21,6 +22,7 @@ interface ServiceSelectorProps {
   onChange: (updated: Partial<OrderDraft>) => void;
   onNext: () => void;
   isSaving?: boolean;
+  onOpenFreeTools?: () => void;
 }
 
 interface ServiceCardItem {
@@ -46,6 +48,7 @@ export const ServiceSelector: React.FC<ServiceSelectorProps> = ({
   onChange,
   onNext,
   isSaving,
+  onOpenFreeTools,
 }) => {
   const [error, setError] = useState<string | null>(null);
 
@@ -78,7 +81,7 @@ export const ServiceSelector: React.FC<ServiceSelectorProps> = ({
   return (
     <div className="w-full max-w-xl mx-auto space-y-6 animate-fadeIn">
       {/* Brand Header */}
-      <BrandHeader />
+      <BrandHeader onOpenFreeTools={onOpenFreeTools} />
 
       {/* Dedicated TikTok Promotion Badge */}
       <div className="bg-gradient-to-r from-gray-900 via-black to-gray-900 border border-gray-800 rounded-2xl p-3 sm:p-4 text-white flex items-center justify-between shadow-sm">

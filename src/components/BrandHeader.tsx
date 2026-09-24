@@ -4,13 +4,14 @@ import { UserProfileBadge } from './UserProfileBadge.tsx';
 
 interface BrandHeaderProps {
   subtitleExtra?: React.ReactNode;
+  onOpenFreeTools?: () => void;
 }
 
-export const BrandHeader: React.FC<BrandHeaderProps> = ({ subtitleExtra }) => {
+export const BrandHeader: React.FC<BrandHeaderProps> = ({ subtitleExtra, onOpenFreeTools }) => {
   return (
     <div className="w-full flex flex-col items-center justify-center text-center pt-1 pb-2">
       {/* Profile Section with Avatar, Username & Pencil Edit */}
-      <UserProfileBadge />
+      <UserProfileBadge onOpenFreeTools={onOpenFreeTools} />
 
       {/* Title */}
       <h1 className="text-4xl sm:text-5xl md:text-6xl font-black text-blue-600 tracking-tight font-sans select-none">
